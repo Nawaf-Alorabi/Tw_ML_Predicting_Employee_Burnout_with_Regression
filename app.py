@@ -47,10 +47,10 @@ function navigateTo(pageName) {
 """
 
 if st.session_state.page == "hr":
-    import HR_page as hr_dashboard
+    import pages.HR_page as hr_dashboard
     hr_dashboard.render(NAV_SCRIPT)
 elif st.session_state.page == "mgr":
-    import manager_page as mgr_selection
+    import pages.manager_page as mgr_selection
     mgr_selection.render(NAV_SCRIPT)
 else:
     def render_landing():
