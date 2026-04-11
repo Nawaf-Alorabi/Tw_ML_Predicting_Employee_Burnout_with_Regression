@@ -26,4 +26,4 @@ The challenge is that traditional management only looks at output, missing the *
 1. Layan Almohammadi
 2. Abrar Alabdulwahab
 3. Nawaf Alorabi
-4. Abdulmajeed 
+4. [Abdulmajeed Alshehri](https://www.linkedin.com/in/a-m-alshehri/)
