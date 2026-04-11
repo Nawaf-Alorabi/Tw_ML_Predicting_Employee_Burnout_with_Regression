@@ -1,38 +1,52 @@
-"""
-manager_page.py  –  Manager navigator: choose a department
-"""
+"""manager_page.py — Manager navigator: choose a department."""
 import streamlit as st
+import theme
 from utils import back_button
 
-
-DEPARTMENTS = {
-    "HR":        {"icon": "🧑‍💼", "desc": "Human Resources team burnout insights.",       "page": "dep_hr"},
-    "Finance":   {"icon": "💰", "desc": "Finance department risk and workload trends.",    "page": "dep_finance"},
-    "Tech":      {"icon": "💻", "desc": "Technical team burnout patterns and drivers.",    "page": "dep_tech"},
-    "Marketing": {"icon": "📣", "desc": "Marketing team satisfaction and burnout scores.", "page": "dep_marketing"},
-}
+DEPARTMENTS = [
+    {"name": "HR",        "icon": "🧑‍💼", "color": "#f97316", "page": "dep_hr",
+     "desc": "Human resources team burnout risk and wellness indicators."},
+    {"name": "Finance",   "icon": "💰", "color": "#f59e0b", "page": "dep_finance",
+     "desc": "Finance department workload pressure and risk trends."},
+    {"name": "Tech",      "icon": "💻", "color": "#ef4444", "page": "dep_tech",
+     "desc": "Technical team burnout patterns, overtime, and satisfaction."},
+    {"name": "Marketing", "icon": "📣", "color": "#a855f7", "page": "dep_marketing",
+     "desc": "Marketing team goal pressure and engagement analysis."},
+]
 
 
 def show():
+    theme.inject()
     back_button("home", "← Back to Portal")
-    st.title("👔 Manager — Department Navigator")
-    st.markdown("Select a department to view its detailed burnout dashboard.")
-    st.markdown("---")
+    theme.page_header("👔", "Manager Dashboard", "Select a department to view detailed burnout insights")
+
+    st.markdown("""
+    <div style="background:#1a1a1a; border:1px solid #2e2e2e; border-radius:10px;
+                padding:0.9rem 1.2rem; margin-bottom:1.8rem; display:flex; align-items:center; gap:10px;">
+        <span style="font-size:1rem;">⚠️</span>
+        <span style="color:#9ca3af; font-size:0.87rem;">
+            Upload a department CSV or the full master dataset — the dashboard will filter automatically.
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
 
     cols = st.columns(2, gap="large")
-    for idx, (dept, info) in enumerate(DEPARTMENTS.items()):
+    for idx, dept in enumerate(DEPARTMENTS):
         with cols[idx % 2]:
-            st.markdown(
-                f"""
-                <div style="border:1px solid #e0e0e0; border-radius:14px; padding:1.5rem;
-                            background:#fafafa; margin-bottom:1rem; text-align:center;">
-                    <div style="font-size:2.5rem;">{info['icon']}</div>
-                    <div style="font-size:1.2rem; font-weight:700; margin:0.4rem 0 0.2rem;">{dept}</div>
-                    <div style="color:#666; font-size:0.88rem;">{info['desc']}</div>
+            st.markdown(f"""
+            <div style="background:#1a1a1a; border:1px solid #2e2e2e;
+                        border-top:3px solid {dept['color']}; border-radius:14px;
+                        padding:1.6rem 1.4rem; margin-bottom:0.8rem;">
+                <div style="font-size:1.8rem; margin-bottom:0.6rem;">{dept['icon']}</div>
+                <div style="font-size:1.05rem; font-weight:700; color:#f5f5f5; margin-bottom:0.3rem;">
+                    {dept['name']} Department
                 </div>
-                """,
-                unsafe_allow_html=True,
-            )
-            if st.button(f"Open {dept} Dashboard", key=f"btn_{dept}", use_container_width=True):
-                st.session_state.page = info["page"]
+                <div style="color:#9ca3af; font-size:0.85rem; line-height:1.5;">
+                    {dept['desc']}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button(f"Open {dept['name']} Dashboard →", key=f"btn_{dept['name']}",
+                         use_container_width=True):
+                st.session_state.page = dept["page"]
                 st.rerun()

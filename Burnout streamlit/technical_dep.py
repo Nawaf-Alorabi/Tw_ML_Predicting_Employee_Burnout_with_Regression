@@ -1,41 +1,50 @@
-"""
-technical_dep.py  –  Tech department-level dashboard
-"""
+"""technical_dep.py — Tech department dashboard."""
 import streamlit as st
 import pandas as pd
+import theme
 from utils import load_model, predict, risk_label, back_button
 from dep_dashboard import render
 
-
 DEPT_NAME = "Tech"
 DEPT_KEY  = "Tech"
+ICON      = "💻"
+COLOR     = "#ef4444"
 
 
 def show():
-    back_button("manager", "← Back to Manager Navigator")
-    st.title(f"💻 {DEPT_NAME} Department Dashboard")
-    st.markdown("Upload the **Tech department dataset** to view burnout insights for Tech employees.")
+    theme.inject()
+    back_button("manager", "← Back to Departments")
+    theme.page_header(ICON, f"{DEPT_NAME} Department",
+                      "Burnout risk, workload pressure, and wellness signals for Tech employees")
 
     model = load_model()
     if model is None:
-        st.error("❌ Model file `stacking_burnout_model.joblib` not found. Place it in the app folder.")
+        st.error("❌ `stacking_burnout_model.joblib` not found in the app folder.")
         return
 
     with st.sidebar:
-        st.header(f"📂 Upload {DEPT_NAME} Data")
-        data_file = st.file_uploader(f"{DEPT_NAME} Employee Dataset (.csv)", type=["csv"])
+        st.markdown(f"### {ICON} {DEPT_NAME} Data")
+        data_file = st.file_uploader(f"{DEPT_NAME} Dataset (.csv)", type=["csv"])
         st.markdown("---")
         use_role_mean = st.checkbox("Recompute role_encoded from data", value=False)
 
     if not data_file:
-        st.info(f"👈 Upload the {DEPT_NAME} department CSV in the sidebar.")
+        st.markdown(f"""
+        <div style="background:#1a1a1a; border:1px dashed {COLOR}44; border-radius:12px;
+                    padding:2rem; text-align:center;">
+            <div style="font-size:2rem; margin-bottom:0.5rem;">{ICON}</div>
+            <div style="font-weight:600; color:#f5f5f5; margin-bottom:0.3rem;">Upload {DEPT_NAME} data</div>
+            <div style="font-size:0.87rem; color:#9ca3af;">
+                Upload the {DEPT_NAME} CSV (or full master CSV) in the sidebar.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         return
 
     df_raw = pd.read_csv(data_file)
-
     if "broad_department" in df_raw.columns:
-        dept_vals = df_raw["broad_department"].unique().tolist()
-        if DEPT_KEY in dept_vals and len(dept_vals) > 1:
+        vals = df_raw["broad_department"].unique().tolist()
+        if DEPT_KEY in vals and len(vals) > 1:
             st.info(f"ℹ️ Full dataset detected — filtering to **{DEPT_KEY}** employees only.")
             df_raw = df_raw[df_raw["broad_department"] == DEPT_KEY].reset_index(drop=True)
 
@@ -43,9 +52,18 @@ def show():
         st.warning(f"⚠️ No employees found for department '{DEPT_KEY}'.")
         return
 
-    st.success(f"✅ Loaded **{len(df_raw):,} {DEPT_NAME} employees**.")
+    st.markdown(f"""
+    <div style="background:#1a1a1a; border:1px solid #2e2e2e; border-left:3px solid {COLOR};
+                border-radius:10px; padding:0.7rem 1.2rem; margin-bottom:1.2rem;
+                display:flex; align-items:center; gap:10px;">
+        <span style="color:#22c55e;">✓</span>
+        <span style="color:#d1d5db; font-size:0.9rem;">
+            <strong style="color:#f5f5f5;">{len(df_raw):,}</strong> {DEPT_NAME} employees loaded.
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
 
-    with st.spinner("Generating predictions…"):
+    with st.spinner(f"🔥 Scoring {DEPT_NAME} team…"):
         preds = predict(df_raw, model, use_role_mean)
 
     df_result = df_raw.copy()
