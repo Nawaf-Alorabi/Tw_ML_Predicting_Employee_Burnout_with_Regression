@@ -1,4 +1,8 @@
 import streamlit as st
+import sys
+import os
+ 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "Burnout_Streamlit"))
 
 st.set_page_config(
     page_title="Burnout Intelligence Platform",
@@ -6,24 +10,24 @@ st.set_page_config(
     layout="wide",
 )
 
+ 
 if "page" not in st.session_state:
     st.session_state.page = "home"
-
+ 
 if st.session_state.page == "hr":
-    import hr_page; hr_page.show()
+    import Burnout_Streamlit.hr_page as hr_page; hr_page.show()
 elif st.session_state.page == "manager":
-    import manager_page; manager_page.show()
+    import Burnout_Streamlit.manager_page as manager_page; manager_page.show()
 elif st.session_state.page == "dep_hr":
-    import hr_dep; hr_dep.show()
+    import Burnout_Streamlit.hr_dep as hr_dep; hr_dep.show()
 elif st.session_state.page == "dep_finance":
-    import finance_dep; finance_dep.show()
+    import Burnout_Streamlit.finance_dep as finance_dep; finance_dep.show()
 elif st.session_state.page == "dep_marketing":
-    import marketing_dep; marketing_dep.show()
+    import Burnout_Streamlit.marketing_dep as marketing_dep; marketing_dep.show()
 elif st.session_state.page == "dep_tech":
-    import technical_dep; technical_dep.show()
+    import Burnout_Streamlit.technical_dep as technical_dep; technical_dep.show()
 else:
-    import theme; theme.inject()
-
+    import Burnout_Streamlit.theme as theme; theme.inject()
     # ── Extra CSS to style the st.button inside each card column ─────
     st.markdown("""
     <style>
