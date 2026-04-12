@@ -151,26 +151,26 @@ def show():
         st.pyplot(fig)
     plt.close(fig)
 
-    # ── Dept distribution ────────────────────────────────────────────
-    st.markdown("---")
-    theme.section_label("Risk Breakdown by Department")
+    # # ── Dept distribution ────────────────────────────────────────────
+    # st.markdown("---")
+    # theme.section_label("Risk Breakdown by Department")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        theme.section_label("Score Distribution")
-        hist_counts = pd.cut(pd.Series(preds), bins=20).value_counts().sort_index()
-        st.bar_chart(
-            pd.DataFrame({"Employees": hist_counts.values},
-                          index=[str(i) for i in hist_counts.index]),
-            color="#f97316",
-        )
-    with col2:
-        theme.section_label("Risk Level Count by Department")
-        pivot = (
-            df_result.groupby(["broad_department", "risk_level"])
-            .size().unstack(fill_value=0).reindex(departments)
-        )
-        st.bar_chart(pivot)
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     theme.section_label("Score Distribution")
+    #     hist_counts = pd.cut(pd.Series(preds), bins=20).value_counts().sort_index()
+    #     st.bar_chart(
+    #         pd.DataFrame({"Employees": hist_counts.values},
+    #                       index=[str(i) for i in hist_counts.index]),
+    #         color="#f97316",
+    #     )
+    # with col2:
+    #     theme.section_label("Risk Level Count by Department")
+    #     pivot = (
+    #         df_result.groupby(["broad_department", "risk_level"])
+    #         .size().unstack(fill_value=0).reindex(departments)
+    #     )
+    #     st.bar_chart(pivot)
 
     # ── Role breakdown ───────────────────────────────────────────────
     if "role" in df_result.columns:

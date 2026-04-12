@@ -92,14 +92,14 @@ def render(df_result: pd.DataFrame, dept_name: str, preds: np.ndarray):
     plt.close(fig)
 
     # ── Score histogram ──────────────────────────────────────────────
-    st.markdown("---")
-    st.markdown('<div class="burn-section-label">Score Distribution</div>', unsafe_allow_html=True)
-    hist_counts = pd.cut(pd.Series(preds), bins=15).value_counts().sort_index()
-    st.bar_chart(
-        pd.DataFrame({"Employees": hist_counts.values},
-                     index=[str(i) for i in hist_counts.index]),
-        color="#f97316",
-    )
+    # st.markdown("---")
+    # st.markdown('<div class="burn-section-label">Score Distribution</div>', unsafe_allow_html=True)
+    # hist_counts = pd.cut(pd.Series(preds), bins=15).value_counts().sort_index()
+    # st.bar_chart(
+    #     pd.DataFrame({"Employees": hist_counts.values},
+    #                  index=[str(i) for i in hist_counts.index]),
+    #     color="#f97316",
+    # )
 
     # ── Role breakdown ───────────────────────────────────────────────
     if "role" in df_result.columns:
